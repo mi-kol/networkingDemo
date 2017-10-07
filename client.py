@@ -3,9 +3,8 @@
 import socket
 
 s = socket.socket()
-host = socket.gethostname()
 port = 12345
 
-s.connect((host, port))
+s.connect(('10.0.0.68', port))
 print(bytes.decode(s.recv(1024)))
 s.close()
