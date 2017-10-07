@@ -1,4 +1,4 @@
-# Project Title
+# INFO350 Networking Demonstration
 
 This repository, at completion, should hold all the files necessary to hold a successful networking demonstration that demonstrates how packets work in a closed environment. My setup has 3 raspberry pi's essentially out of the box, in order to cut down on ambient packets that aren't being actively sent by these python scripts. 
 
