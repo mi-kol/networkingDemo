@@ -10,6 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 To get this up and running, you're gonna need
 * [ChatterBot](https://github.com/gunthercox/ChatterBot) - The chatterbot library used. Machine Learning.
+* [pykov](https://github.com/riccardoscalco/Pykov) - the markov chain library used.
 * python-dev, python3-dev, python 2.7, python 3.5
 * Some computers, and a wired router to set up an enclosed network.
 
@@ -35,7 +36,7 @@ At the end of this project, I hope to have a much better understanding about net
 - [ ] packet fishtank
 - [ ] packet around the world (tracking)
 - [ ] battleship?
-- [ ] chatroom with in-room messages about how packets are moving around the system
+- [x] chatroom 
 
 ## Authors
 
