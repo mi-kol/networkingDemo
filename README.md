@@ -29,6 +29,7 @@ At the end of this project, I hope to have a much better understanding about net
 
 - [x] packet sniffer
 - [x] simple server client communication
+- [ ] markov chain inspired packet bouncer
 - [ ] chatbot interaction
 - [ ] fun packet injector
 - [ ] packet fishtank
