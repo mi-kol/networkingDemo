@@ -3,10 +3,13 @@ import socket
 import struct
 import numpy
 import itertools
+import random
+import click
 
-from random import *
-
-T = pykov.Chain()
+@click.command()
+@click.option('--walk', default=1, help="Number of times you want to walk.")
+def walker(walk):
+    click.echo(markovChainGen().walk(walk))
 
 class FauxClient:
     def __init__(self, id, ip, port):
@@ -14,44 +17,40 @@ class FauxClient:
         self.ip = ip
         self.port = port
 
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
-clients = []
-for i in range(random.randint(1, 4)):
-    clients.append(FauxClient(i+1, socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff))), random.randint(0, 65565)))
 
-allPossibleTransitions = []
-iterables = [clients, clients]
-for i in itertools.product(*iterables):
-    allPossibleTransitions.append(i)
 
-relationalTransitions = []
-selfTransitions = []
-sRT = []
-#sRT stands for sorted relational tarnsitions
+def markovChainGen():
+    clients = []
+    allPossibleTransitions = []
+    transitionCoefficients = []
+    straightCoefficients = []
+    straightChunks = []
+    for i in range(random.randint(1, 4)):
+        clients.append(FauxClient(i+1, socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff))), random.randint(0, 65565)))
 
-for x,y in allPossibleTransitions:
-    if x == y:
-        selfTransitions.append((x,y))
-    else:
-        relationalTransitions.append((x,y))
+    for i in itertools.product(clients, repeat=2):
+        allPossibleTransitions.append(i)
 
-for x,y in relationalTransitions:
-    for a,b in relationalTransitions:
-        if (a,b) == (y,x):
-            sRT.append(([x,y], [a,b]))
+    chunked = numpy.array(list(chunks(allPossibleTransitions, 4)))
 
-#this can be really improved! make it not have duplicates while it's populating sRT
-for i in sRT:
-    for i in sRT:
-        for j in sRT:
-            if (i[0],i[1]) == (j[0],j[1]) and i != j:
-                sRT.remove(j)
-            if (i[0],i[1]) == (j[1], j[0]) and i != j:
-                sRT.remove(j)
+    for i in range(len(clients)):
+        transitionCoefficients.append(numpy.random.dirichlet(np.ones(len(clients))*10, size=1))
 
-# so now we have a populated list of all the relational transitions, in the state that [[[a,b], [b,a]],[[a,c],[c,a]],...]
+    for i in transitionCoefficients:
+        for j in i:
+            for k in j:
+                straightCoefficients.append(k)
 
-def markovBuilder():
-    for x,y in sRT:
-        chanceMatcher = np.random.dirichlet(np.ones(len(clients)), size=1)
-        T.update({(x,y): })
+    for i in chunked:
+        for j in i:
+            straightChunks.append(j)
+
+    straightTuples = list(map(tuple, straightChunks))
+    chain = dict(zip(straightTuples, straightCoefficients))
+    T = pykov.Chain(chain)
+    return T
